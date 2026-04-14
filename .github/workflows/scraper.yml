@@ -30,7 +30,7 @@ jobs:
 
       # 4. Instalar dependencias
       - name: Instalar dependencias
-        run: pip install -r data/requirements.txt
+        run: pip install -r requirements.txt
 
       # 5. Descargar Google Sheets
       - name: Fetch watchlist
