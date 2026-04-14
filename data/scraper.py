@@ -14,6 +14,11 @@ PROJECTS_FILE = "discovered_projects.json"
 
 MAX_REINTENTOS = 3
 
+# User-Agent para simular un navegador y evitar bloqueos
+HEADERS = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+}
+
 
 def load_db() -> Dict[str, Any]:
     if not os.path.exists(DB_PATH):
@@ -46,7 +51,7 @@ def load_projects() -> List[Dict]:
 def get_data(url: str) -> Optional[Dict[str, Any]]:
     for intento in range(1, MAX_REINTENTOS + 1):
         try:
-            r = requests.get(url, timeout=15)
+            r = requests.get(url, timeout=15, headers=HEADERS)
             r.raise_for_status()
             soup = BeautifulSoup(r.text, "html.parser")
             text = soup.get_text()
