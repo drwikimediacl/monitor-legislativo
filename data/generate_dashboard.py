@@ -5,10 +5,10 @@ import json
 import os
 from datetime import datetime
 
-# Rutas relativas al script (está en data/)
+# Rutas relativas al script (está dentro de data/)
 PROJECTS_FILE = "discovered_projects.json"
 DB_FILE = "db.json"
-OUTPUT_HTML = "../index.html"   # el HTML en la raíz para GitHub Pages
+OUTPUT_HTML = "../index.html"   # El dashboard se escribe en la raíz
 
 
 def load_json(path):
@@ -25,7 +25,6 @@ def generate_dashboard():
     proyectos = proyectos_data.get("proyectos", [])
     fecha_actualizacion = proyectos_data.get("fecha_actualizacion", datetime.now().isoformat())
     
-    # Añadir último chequeo
     for p in proyectos:
         boletin = p["boletin"]
         if boletin in db_data:
@@ -33,7 +32,6 @@ def generate_dashboard():
         else:
             p["last_check"] = "Nunca"
     
-    # Generar HTML (igual que antes)
     html = f"""<!DOCTYPE html>
 <html lang="es">
 <head>
