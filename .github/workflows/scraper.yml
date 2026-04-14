@@ -47,8 +47,8 @@ jobs:
         run: |
           git config --global user.name "bot"
           git config --global user.email "bot@github.com"
-          git fetch
-          git pull --rebase origin main
+          git fetch origin main
+          git rebase origin/main
           git add data/db.json
           git commit -m "update db" || echo "no changes"
-          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git main
