@@ -49,4 +49,5 @@ jobs:
           git config --global user.email "bot@github.com"
           git add data/db.json
           git commit -m "update db" || echo "no changes"
+          git pull --rebase
           git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
