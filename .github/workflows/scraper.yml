@@ -15,38 +15,39 @@ jobs:
       # 1. Descargar el repo
       - uses: actions/checkout@v4
 
-      # 2. DEBUG (ver archivos reales)
-      - name: DEBUG archivos
-        run: |
-          echo "=== RAIZ ==="
-          ls -la
-          echo "=== TODO ==="
-          ls -R
-
-      # 3. Configurar Python
+      # 2. Configurar Python
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
-      # 4. Instalar dependencias
+      # 3. Instalar dependencias
       - name: Instalar dependencias
         run: pip install -r data/requirements.txt
 
-      # 5. Descargar Google Sheets
+      # 4. Descargar Google Sheets con debug
       - name: Fetch watchlist
-        run: python data/fetch_watchlist.py
+        run: |
+          echo "Starting fetch_watchlist.py..."
+          python data/fetch_watchlist.py
+          echo "Checking if file was created..."
+          ls -la data/watchlist_enriched.xlsx
 
-      # 6. Ejecutar scraper
+      # 5. Ejecutar scraper
       - name: Run scraper
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-        run: python data/scraper.py
+        run: |
+          echo "Starting scraper.py..."
+          python data/scraper.py
+          echo "Checking if db.json was created..."
+          ls -la data/db.json
 
-      # 7. Guardar cambios en db.json
+      # 6. Guardar cambios en db.json
       - name: Guardar cambios
         run: |
           git config --global user.name "bot"
           git config --global user.email "bot@github.com"
+          git fetch
           git add data/db.json
           git commit -m "update db" || echo "no changes"
           git pull --rebase
