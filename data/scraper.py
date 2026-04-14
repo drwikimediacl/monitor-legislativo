@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 import requests
 from bs4 import BeautifulSoup
 import json
@@ -5,8 +8,9 @@ import os
 import time
 from typing import Optional, Dict, Any, List
 
-DB_PATH = "data/db.json"
-PROJECTS_FILE = "data/discovered_projects.json"
+# Rutas relativas al script (está dentro de data/)
+DB_PATH = "db.json"
+PROJECTS_FILE = "discovered_projects.json"
 
 MAX_REINTENTOS = 3
 
@@ -22,13 +26,11 @@ def load_db() -> Dict[str, Any]:
 
 
 def save_db(db: Dict[str, Any]) -> None:
-    os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
     with open(DB_PATH, "w", encoding="utf-8") as f:
         json.dump(db, f, indent=2, ensure_ascii=False)
 
 
 def load_projects() -> List[Dict]:
-    """Carga la lista de proyectos a monitorear desde el archivo JSON unificado."""
     if not os.path.exists(PROJECTS_FILE):
         print(f"ERROR: No se encontró {PROJECTS_FILE}. Ejecuta primero discover_projects.py")
         return []
