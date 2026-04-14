@@ -1,54 +1,42 @@
-name: Monitor legislativo
+name: Actualizar base de datos legislativa
 
 on:
   schedule:
-    - cron: "0 */6 * * *"
-  workflow_dispatch:
+    # Se ejecuta cada 6 horas (puedes cambiarlo)
+    - cron: '0 */6 * * *'
+  workflow_dispatch:  # Permite ejecutar manualmente desde la pestaña Actions
 
 jobs:
-  run:
+  scrape:
     runs-on: ubuntu-latest
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    permissions:
+      contents: write   # Permiso para que la acción pueda hacer push
 
     steps:
-      # 1. Descargar el repo
-      - uses: actions/checkout@v4
-
-      # 2. Configurar Python
-      - uses: actions/setup-python@v5
+      - name: Checkout del repositorio
+        uses: actions/checkout@v4
         with:
-          python-version: "3.11"
+          fetch-depth: 0
 
-      # 3. Instalar dependencias
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
       - name: Instalar dependencias
-        run: pip install -r data/requirements.txt
-
-      # 4. Descargar Google Sheets con debug
-      - name: Fetch watchlist
         run: |
-          echo "Starting fetch_watchlist.py..."
-          python data/fetch_watchlist.py
-          echo "Checking if file was created..."
-          ls -la data/watchlist_enriched.xlsx
+          pip install -r requirements.txt
 
-      # 5. Ejecutar scraper
-      - name: Run scraper
-        env:
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+      - name: Ejecutar scraper
         run: |
-          echo "Starting scraper.py..."
-          python data/scraper.py
-          echo "Checking if db.json was created..."
-          ls -la data/db.json
+          python scraper.py
 
-      # 6. Guardar cambios en db.json
-      - name: Guardar cambios
-        run: |
-          git config --global user.name "bot"
-          git config --global user.email "bot@github.com"
-          git fetch origin main
-          git rebase origin/main
-          git add data/db.json
-          git commit -m "update db" || echo "no changes"
-          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git main
+      # Acción que maneja el commit y push automáticamente (sin errores de conflicto)
+      - name: Guardar cambios en db.json
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Actualización automática de db.json"
+          file_pattern: "data/db.json"
+          commit_user_name: "Bot Legislativo"
+          commit_user_email: "bot@monitorlegislativo.cl"
+          commit_author: "Bot Legislativo <bot@monitorlegislativo.cl>"
