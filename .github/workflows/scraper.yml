@@ -34,13 +34,13 @@ jobs:
 
       # 5. Descargar Google Sheets
       - name: Fetch watchlist
-        run: python fetch_watchlist.py
+        run: python data/fetch_watchlist.py
 
       # 6. Ejecutar scraper
       - name: Run scraper
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-        run: python scraper.py
+        run: python data/scraper.py
 
       # 7. Guardar cambios en db.json
       - name: Guardar cambios
