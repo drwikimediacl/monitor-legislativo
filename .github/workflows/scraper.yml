@@ -25,6 +25,9 @@ jobs:
       - name: Instalar dependencias
         run: pip install -r data/requirements.txt
 
+      - name: Descargar watchlist desde Google Sheets
+        run: python data/fetch_watchlist.py
+
       - name: Descubrir proyectos (Senado + Cámara + Watchlist)
         run: python data/discover_projects.py
 
@@ -36,7 +39,7 @@ jobs:
       - name: Generar dashboard web
         run: python data/generate_dashboard.py
 
-      - name: Guardar todos los cambios (db.json, dashboard, etc.)
+      - name: Guardar todos los cambios
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "Actualización automática: proyectos, cambios y dashboard"
