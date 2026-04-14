@@ -23,18 +23,18 @@ jobs:
           python-version: '3.11'
 
       - name: Instalar dependencias
-        run: pip install -r requirements.txt
+        run: pip install -r data/requirements.txt
 
       - name: Descubrir proyectos (Senado + Cámara + Watchlist)
-        run: python discover_projects.py
+        run: python data/discover_projects.py
 
       - name: Monitorear cambios en proyectos
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-        run: python scraper.py
+        run: python data/scraper.py
 
       - name: Generar dashboard web
-        run: python generate_dashboard.py
+        run: python data/generate_dashboard.py
 
       - name: Guardar todos los cambios (db.json, dashboard, etc.)
         uses: stefanzweifel/git-auto-commit-action@v5
