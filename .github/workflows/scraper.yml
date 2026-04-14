@@ -12,21 +12,37 @@ jobs:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     steps:
+      # 1. Descargar el repo
       - uses: actions/checkout@v4
 
+      # 2. DEBUG (ver archivos reales)
+      - name: DEBUG archivos
+        run: |
+          echo "=== RAIZ ==="
+          ls -la
+          echo "=== TODO ==="
+          ls -R
+
+      # 3. Configurar Python
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
-      - run: pip install -r requirements.txt
+      # 4. Instalar dependencias
+      - name: Instalar dependencias
+        run: pip install -r requirements.txt
 
-      - run: python fetch_watchlist.py
+      # 5. Descargar Google Sheets
+      - name: Fetch watchlist
+        run: python fetch_watchlist.py
 
+      # 6. Ejecutar scraper
       - name: Run scraper
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
         run: python scraper.py
 
+      # 7. Guardar cambios en db.json
       - name: Guardar cambios
         run: |
           git config --global user.name "bot"
