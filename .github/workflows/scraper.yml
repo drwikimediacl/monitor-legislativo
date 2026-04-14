@@ -40,6 +40,6 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "Actualización automática: proyectos, cambios y dashboard"
-          file_pattern: "data/ db.json index.html"
+          file_pattern: "data/ index.html"
           commit_user_name: "Bot Legislativo"
           commit_user_email: "bot@monitorlegislativo.cl"
