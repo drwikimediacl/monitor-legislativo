@@ -2,15 +2,14 @@ name: Monitoreo legislativo
 
 on:
   schedule:
-    # Se ejecuta cada 6 horas (puedes ajustar la frecuencia)
     - cron: '0 */6 * * *'
-  workflow_dispatch:  # Permite ejecución manual
+  workflow_dispatch:
 
 jobs:
   scrape:
     runs-on: ubuntu-latest
     permissions:
-      contents: write   # Permiso para hacer push
+      contents: write
 
     steps:
       - name: Checkout del repositorio
@@ -24,24 +23,23 @@ jobs:
           python-version: '3.11'
 
       - name: Instalar dependencias
-        run: |
-          pip install -r requirements.txt
+        run: pip install -r requirements.txt
 
-      - name: Obtener watchlist desde Google Sheets
-        run: |
-          python data/fetch_watchlist.py
+      - name: Descubrir proyectos (Senado + Cámara + Watchlist)
+        run: python discover_projects.py
 
-      - name: Ejecutar scraper y detectar cambios
+      - name: Monitorear cambios en proyectos
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-        run: |
-          python scraper.py
+        run: python scraper.py
 
-      - name: Guardar cambios en db.json
+      - name: Generar dashboard web
+        run: python generate_dashboard.py
+
+      - name: Guardar todos los cambios (db.json, dashboard, etc.)
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "Actualización automática de db.json"
-          file_pattern: "data/db.json"
+          commit_message: "Actualización automática: proyectos, cambios y dashboard"
+          file_pattern: "data/ db.json index.html"
           commit_user_name: "Bot Legislativo"
           commit_user_email: "bot@monitorlegislativo.cl"
-          commit_author: "Bot Legislativo <bot@monitorlegislativo.cl>"
