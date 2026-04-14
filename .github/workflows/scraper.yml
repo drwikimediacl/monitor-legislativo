@@ -1,16 +1,16 @@
-name: Actualizar base de datos legislativa
+name: Monitoreo legislativo
 
 on:
   schedule:
-    # Se ejecuta cada 6 horas (puedes cambiarlo)
+    # Se ejecuta cada 6 horas (puedes ajustar la frecuencia)
     - cron: '0 */6 * * *'
-  workflow_dispatch:  # Permite ejecutar manualmente desde la pestaña Actions
+  workflow_dispatch:  # Permite ejecución manual
 
 jobs:
   scrape:
     runs-on: ubuntu-latest
     permissions:
-      contents: write   # Permiso para que la acción pueda hacer push
+      contents: write   # Permiso para hacer push
 
     steps:
       - name: Checkout del repositorio
@@ -27,11 +27,16 @@ jobs:
         run: |
           pip install -r requirements.txt
 
-      - name: Ejecutar scraper
+      - name: Obtener watchlist desde Google Sheets
+        run: |
+          python data/fetch_watchlist.py
+
+      - name: Ejecutar scraper y detectar cambios
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
         run: |
           python scraper.py
 
-      # Acción que maneja el commit y push automáticamente (sin errores de conflicto)
       - name: Guardar cambios en db.json
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
