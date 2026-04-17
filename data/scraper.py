@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+import hashlib
 import requests
 from bs4 import BeautifulSoup
 import json
@@ -55,8 +56,11 @@ def get_data(url: str) -> Optional[Dict[str, Any]]:
             r.raise_for_status()
             soup = BeautifulSoup(r.text, "html.parser")
             text = soup.get_text()
+            # hashlib.sha256 es estable entre procesos; hash() de Python usa
+            # PYTHONHASHSEED aleatorio y producía "cambios" falsos en cada corrida de CI.
+            digest = hashlib.sha256(text[:5000].encode("utf-8")).hexdigest()
             return {
-                "hash": hash(text[:5000]),
+                "hash": digest,
                 "last_check": time.strftime("%Y-%m-%d %H:%M:%S")
             }
         except Exception as e:

@@ -4,3 +4,4 @@ lxml>=5.0.0
 SPARQLWrapper>=2.0.0
 pandas
 openpyxl
+anthropic>=0.90.0

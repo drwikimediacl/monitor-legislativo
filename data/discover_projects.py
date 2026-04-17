@@ -4,10 +4,16 @@
 import requests
 import json
 import os
+import sys
 import time
 from datetime import datetime, timedelta
 from typing import List, Dict, Optional
 from bs4 import BeautifulSoup
+
+# Clasificador LLM opcional — si ANTHROPIC_API_KEY está seteada, reemplaza
+# el filtro por keyword exacto del título con clasificación semántica.
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from classifier import classify as llm_classify, is_available as llm_available
 
 # ================= CONFIGURACIÓN =================
 KEYWORDS = [
@@ -25,7 +31,9 @@ DIAS_HACIA_ATRAS = 60
 MAX_REINTENTOS = 3
 
 OUTPUT_FILE = "discovered_projects.json"
-WATCHLIST_FILE = "watchlist_enriched.xlsx"
+# El workflow corre este script desde la raíz, y fetch_watchlist.py escribe
+# en "data/watchlist_enriched.xlsx" — mantener coherencia.
+WATCHLIST_FILE = "data/watchlist_enriched.xlsx"
 
 
 def contiene_keywords(texto: str) -> bool:
@@ -134,17 +142,34 @@ def obtener_proyectos_camara_buscador() -> List[Dict]:
         except:
             fecha_iso = fecha
         
-        # Aplicar filtro de keywords por si acaso
-        if contiene_keywords(titulo):
-            proyectos.append({
-                "origen": "Cámara de Diputados",
-                "boletin": boletin,
-                "titulo": titulo,
-                "fecha_ingreso": fecha_iso,
-                "estado": estado,
-                "url": url_tramitacion or f"https://www.camara.cl/legislacion/ProyectosDeLey/tramitacion.aspx?prmID={boletin}"
-            })
-    
+        # Filtro por keyword como prefiltro barato. Si hay LLM disponible,
+        # damos una segunda oportunidad a los proyectos que no matchean por
+        # keyword literal pero podrían ser relevantes semánticamente (e.g.
+        # "neurodatos" no calza con "privacidad" pero es del mismo tema).
+        match_keyword = contiene_keywords(titulo)
+        clasificacion = None
+
+        if llm_available():
+            clasificacion = llm_classify(titulo=titulo)
+            es_relevante = clasificacion["relevante"] if clasificacion else match_keyword
+        else:
+            es_relevante = match_keyword
+
+        if not es_relevante:
+            continue
+
+        proyecto = {
+            "origen": "Cámara de Diputados",
+            "boletin": boletin,
+            "titulo": titulo,
+            "fecha_ingreso": fecha_iso,
+            "estado": estado,
+            "url": url_tramitacion or f"https://www.camara.cl/legislacion/ProyectosDeLey/tramitacion.aspx?prmID={boletin}"
+        }
+        if clasificacion:
+            proyecto["clasificacion"] = clasificacion
+        proyectos.append(proyecto)
+
     return proyectos
 
 
@@ -174,6 +199,10 @@ def cargar_watchlist_manual() -> List[Dict]:
 
 def main():
     print("=== DESCUBRIENDO PROYECTOS LEGISLATIVOS ===")
+    if llm_available():
+        print("✨ Clasificador LLM activado (ANTHROPIC_API_KEY seteada)")
+    else:
+        print("ℹ️  Clasificador LLM no disponible — usando sólo filtro por keywords")
     proyectos = []
     
     # Intentar con el buscador de la Cámara
