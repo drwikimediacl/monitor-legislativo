@@ -5,10 +5,11 @@ import json
 import os
 from datetime import datetime
 
-# Rutas relativas al script (está dentro de data/)
+# Rutas relativas al CWD de ejecución. El workflow invoca este script desde
+# la raíz del repo, así que los archivos JSON y el HTML de salida viven ahí.
 PROJECTS_FILE = "discovered_projects.json"
 DB_FILE = "db.json"
-OUTPUT_HTML = "../index.html"   # El dashboard se escribe en la raíz
+OUTPUT_HTML = "index.html"
 
 
 def load_json(path):
