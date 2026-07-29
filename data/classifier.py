@@ -29,7 +29,7 @@ try:
 except ImportError:
     _ANTHROPIC_AVAILABLE = False
 
-MODEL = "claude-haiku-4-5"
+MODEL = "claude-haiku-4-5-20251001"
 MAX_TOKENS = 256
 
 SYSTEM_PROMPT = """Eres un clasificador de proyectos de ley chilenos para Wikimedia Chile.
