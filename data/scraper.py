@@ -4,6 +4,7 @@
 import hashlib
 import requests
 from bs4 import BeautifulSoup
+import xml.etree.ElementTree as ET
 import json
 import os
 import time
@@ -49,7 +50,30 @@ def load_projects() -> List[Dict]:
         return []
 
 
-def get_data(url: str) -> Optional[Dict[str, Any]]:
+def get_ultimo_tramite(boletin: str) -> Optional[Dict[str, str]]:
+    """Consulta el webservice del Senado y devuelve fecha, descripción y
+    etapa del último trámite registrado para un boletín."""
+    numero = boletin.split("-")[0]  # el webservice solo acepta el correlativo, sin la materia
+    url = f"https://tramitacion.senado.cl/wspublico/tramitacion.php?boletin={numero}"
+    try:
+        r = requests.get(url, timeout=15, headers=HEADERS)
+        r.raise_for_status()
+        root = ET.fromstring(r.content)
+        tramites = root.findall(".//tramite")
+        if not tramites:
+            return None
+        ultimo = tramites[-1]
+        return {
+            "fecha": (ultimo.findtext("FECHA") or "").strip(),
+            "descripcion": (ultimo.findtext("DESCRIPCIONTRAMITE") or "").strip(),
+            "etapa": (ultimo.findtext("ETAPDESCRIPCION") or "").strip(),
+        }
+    except Exception as e:
+        print(f"No se pudo obtener tramitación de boletín {numero}: {e}")
+        return None
+
+
+def get_data(url: str, boletin: str) -> Optional[Dict[str, Any]]:
     for intento in range(1, MAX_REINTENTOS + 1):
         try:
             r = requests.get(url, timeout=15, headers=HEADERS)
@@ -59,9 +83,15 @@ def get_data(url: str) -> Optional[Dict[str, Any]]:
             # hashlib.sha256 es estable entre procesos; hash() de Python usa
             # PYTHONHASHSEED aleatorio y producía "cambios" falsos en cada corrida de CI.
             digest = hashlib.sha256(text[:5000].encode("utf-8")).hexdigest()
+
+            ultimo_tramite = get_ultimo_tramite(boletin)
+
             return {
                 "hash": digest,
-                "last_check": time.strftime("%Y-%m-%d %H:%M:%S")
+                "last_check": time.strftime("%Y-%m-%d %H:%M:%S"),
+                "ultimo_tramite_fecha": ultimo_tramite["fecha"] if ultimo_tramite else None,
+                "ultimo_tramite_descripcion": ultimo_tramite["descripcion"] if ultimo_tramite else None,
+                "ultimo_tramite_etapa": ultimo_tramite["etapa"] if ultimo_tramite else None,
             }
         except Exception as e:
             print(f"Intento {intento}/{MAX_REINTENTOS} fallido para {url}: {e}")
@@ -85,20 +115,20 @@ def main() -> None:
     proyectos = load_projects()
     if not proyectos:
         return
-    
+
     db = load_db()
     changes = []
-    
+
     for p in proyectos:
         boletin = p["boletin"]
         url = p["url"]
         titulo = p["titulo"]
-        
+
         print(f"Verificando: {titulo} ({boletin})")
-        new = get_data(url)
+        new = get_data(url, boletin)
         if not new:
             continue
-        
+
         old = db.get(boletin)
         if old is None or old.get("hash") != new.get("hash"):
             changes.append((p, new))
@@ -106,13 +136,19 @@ def main() -> None:
             print(f"  🔄 Cambio detectado")
         else:
             print(f"  ✅ Sin cambios")
-    
+
     save_db(db)
-    
+
     if changes:
         msg = "🚨 *Cambios detectados en proyectos legislativos*\n\n"
         for p, new in changes:
-            msg += f"• *{p['titulo']}* (Boletín: {p['boletin']})\n  <{p['url']}|Ver proyecto>\n\n"
+            fecha = new.get("ultimo_tramite_fecha") or "fecha no disponible"
+            descripcion = new.get("ultimo_tramite_descripcion") or "sin descripción disponible"
+            msg += (
+                f"• *{p['titulo']}* (Boletín: {p['boletin']})\n"
+                f"  📅 {fecha} — {descripcion}\n"
+                f"  <{p['url']}|Ver proyecto>\n\n"
+            )
         send_slack(msg)
         print(msg)
     else:
