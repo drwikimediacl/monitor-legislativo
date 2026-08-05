@@ -65,8 +65,11 @@
     "last_check": "2026-07-29 16:38:19"
   },
   "17112-19": {
-    "hash": "e02f128b310383109ca5450d26beca34a76d1792a67d1b12591af0929280fe6a",
-    "last_check": "2026-07-29 16:38:20"
+    "hash": "3e4af916553477a89d98b2dd404ecf9dfa1a88ea2cdcc8a78b9dfeb0de553cc6",
+    "last_check": "2026-08-05 01:40:07",
+    "ultimo_tramite_fecha": "12/05/2026",
+    "ultimo_tramite_descripcion": "Archivado Rechazado en general. Oficio N° 21.226 remite el proyecto al archivo.",
+    "ultimo_tramite_etapa": "Insistencia"
   },
   "17618-19": {
     "hash": "73df353e8c1228d6e8077c1e743b2b97895e2e0ae7178163bc2d6180b03c0da5",
@@ -151,12 +154,18 @@
     "last_check": "2026-07-29 16:38:30"
   },
   "18318-19": {
-    "hash": "63bc0a6aa893a5d68a330f093d4708a0d3337520dc5169145b25a7f7be07a5bb",
-    "last_check": "2026-07-29 16:38:30"
+    "hash": "a90b76113d9f6428673d0c096f14b65155af0cd3b663b2d5157aba0c06d55566",
+    "last_check": "2026-08-05 01:40:27",
+    "ultimo_tramite_fecha": "04/08/2026",
+    "ultimo_tramite_descripcion": "Cuenta, Oficio de la Comisión de Futuro, Ciencias, Tecnología, Conocimiento e Innovación (N° 21/17/2026), mediante el cual solicita recabar el acuerdo de la Sala para refundir el proyecto, iniciado en moción, boletín N° 18415-18, con los ya refundidos boletines 18246-18, 18318-19 y 18224-18. ACORDADO.",
+    "ultimo_tramite_etapa": "Primer trámite constitucional"
   },
   "18246-18": {
-    "hash": "6861b740ecda3189f548627740d2a43f8c4a6ec4dc5c356811645c4f33152328",
-    "last_check": "2026-07-29 16:38:31"
+    "hash": "6b8c0c14b235f21563455d7823c2fc8454e2c4cf3bf0886caf770a2582e19e02",
+    "last_check": "2026-08-05 01:40:28",
+    "ultimo_tramite_fecha": "04/08/2026",
+    "ultimo_tramite_descripcion": "Cuenta, Oficio de la Comisión de Futuro, Ciencias, Tecnología, Conocimiento e Innovación (N° 21/17/2026), mediante el cual solicita recabar el acuerdo de la Sala para refundir el proyecto, iniciado en moción, boletín N° 18415-18, con los ya refundidos boletines 18246-18, 18318-19 y 18224-18. ACORDADO.",
+    "ultimo_tramite_etapa": "Primer trámite constitucional"
   },
   "18235-19": {
     "hash": "e2ce1fc0e46797807ae1aa3fff0583e4c52c7ede8398f760a9dc2d9dcc53951f",
