@@ -170,5 +170,26 @@
   "18235-19": {
     "hash": "e2ce1fc0e46797807ae1aa3fff0583e4c52c7ede8398f760a9dc2d9dcc53951f",
     "last_check": "2026-07-29 16:38:32"
+  },
+  "16143-02": {
+    "hash": "e2ce1fc0e46797807ae1aa3fff0583e4c52c7ede8398f760a9dc2d9dcc53951f",
+    "last_check": "2026-08-07 02:06:59",
+    "ultimo_tramite_fecha": "21/07/2026",
+    "ultimo_tramite_descripcion": "Cuenta del Mensaje 215-374 que retira y hace presente la urgencia Simple",
+    "ultimo_tramite_etapa": "Primer trámite constitucional"
+  },
+  "16618-07": {
+    "hash": "f97584fd5bbb4709433ebc24e0e86082420096e783577b7788ac850e6de9a449",
+    "last_check": "2026-08-07 02:07:00",
+    "ultimo_tramite_fecha": "29/01/2024",
+    "ultimo_tramite_descripcion": "Cuenta de proyecto . Pasa a Comisión de Constitución, Legislación, Justicia y Reglamento",
+    "ultimo_tramite_etapa": "Primer trámite constitucional"
+  },
+  "13828-19": {
+    "hash": "4dcf1c82698e8d18b7d9c5941f87f43521e74f625b80fabd2084e2ac4203ec1a",
+    "last_check": "2026-08-07 02:07:01",
+    "ultimo_tramite_fecha": "11/05/2026",
+    "ultimo_tramite_descripcion": "Cuenta de primer informe de comisión .  Queda para tabla.",
+    "ultimo_tramite_etapa": "Segundo trámite constitucional"
   }
 }

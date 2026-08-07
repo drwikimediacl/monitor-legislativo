@@ -1,6 +1,6 @@
 {
-  "fecha_actualizacion": "2026-08-06T13:40:56.837824",
-  "total_proyectos": 37,
+  "fecha_actualizacion": "2026-08-07T02:06:10.918041",
+  "total_proyectos": 40,
   "proyectos": [
     {
       "origen": "Watchlist manual",
@@ -331,6 +331,33 @@
       "boletin": "18235-19",
       "titulo": "Impone a las plataformas de redes sociales la obligación de eliminar contenido que induzca a la realización de conductas extremas que pongan en riesgo la integridad o salud de las personas",
       "url": "https://tramitacion.senado.cl/wspublico/tramitacion.php?boletin=18235",
+      "estado": "Monitoreado manualmente",
+      "fecha_ingreso": "",
+      "materia": ""
+    },
+    {
+      "origen": "Watchlist manual",
+      "boletin": "16143-02",
+      "titulo": "Para la protección de la infraestructura crítica del país",
+      "url": "https://tramitacion.senado.cl/wspublico/tramitacion.php?boletin=18235",
+      "estado": "Monitoreado manualmente",
+      "fecha_ingreso": "",
+      "materia": ""
+    },
+    {
+      "origen": "Watchlist manual",
+      "boletin": "16618-07",
+      "titulo": "Modifica la Carta Fundamental, con el objeto de incorporar una disposición transitoria que extiende la facultad del Presidente de la República para decretar zonas de protección de infraestructura crítica",
+      "url": "https://tramitacion.senado.cl/wspublico/tramitacion.php?boletin=16618",
+      "estado": "Monitoreado manualmente",
+      "fecha_ingreso": "",
+      "materia": ""
+    },
+    {
+      "origen": "Watchlist manual",
+      "boletin": "13828-19",
+      "titulo": "Sobre protección de los neuroderechos y la integridad mental, y el desarrollo de la investigación y las neurotecnologías",
+      "url": "https://tramitacion.senado.cl/wspublico/tramitacion.php?boletin=13828-19",
       "estado": "Monitoreado manualmente",
       "fecha_ingreso": "",
       "materia": ""
